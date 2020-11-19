@@ -43,3 +43,5 @@ Gmail using ssl & smtplib. Video recording adapted from [JRodrigoF](https://gith
 * Call function: record_video(duration, last_email)
   * 1st argument: duration (in seconds) for recording
   * 2nd argument: email you want to share the video link with
+* It will ask you to authenticate Google Drive application.
+  * Must use ravenscroft.us.engineering@gmail.com account.
