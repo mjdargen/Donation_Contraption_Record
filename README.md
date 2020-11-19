@@ -10,11 +10,11 @@ with ffmpeg, uploads video to Google Drive using pyDrive, and sends email from
 Gmail using ssl & smtplib. Video recording adapted from [JRodrigoF](https://github.com/JRodrigoF/AVrecordeR).  
 
 ## Project Overview
-Goal: Create a fun contraption that serves as an incentive to donate. Whenever someone donates, the contraption will actuate rewarding the person for donating. A recording of the contraption will be sent to the donor.  
+**Goal:** Create a fun contraption that serves as an incentive to donate. Whenever someone donates, the contraption will actuate rewarding the person for donating. A recording of the contraption will be sent to the donor.  
 
-Background: There are many different examples of similar ideas in existence: coin donation spiral wishing wells, Kickstarter rewards, dunking booths, etc. All of these provide a fun reward for people's contributions. We want to create something in this spirit that brings joy to people for donating to a good cause. Donations will go to a local charity.  
+**Background:** There are many different examples of similar ideas in existence: coin donation spiral wishing wells, Kickstarter rewards, dunking booths, etc. All of these provide a fun reward for people's contributions. We want to create something in this spirit that brings joy to people for donating to a good cause. Donations will go to a local charity.  
 
-Details: This project will incorporate web development, software development, circuits, and mechanical design to accomplish the goal. Throughout this project, the students are going to learn to be more resourceful and how to think like an engineer. They will learn how to use the materials and the educational resources at their disposal to create a unique project.  
+**Details:** This project will incorporate web development, software development, circuits, and mechanical design to accomplish the goal. Throughout this project, the students are going to learn to be more resourceful and how to think like an engineer. They will learn how to use the materials and the educational resources at their disposal to create a unique project.  
 
 ## Installation Steps
 * Install Python 3.8
