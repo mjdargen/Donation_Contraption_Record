@@ -1,6 +1,9 @@
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 from gmail_util import send_email
+import os
+
+DIR_PATH = os.path.dirname(os.path.realpath(__file__))
 
 
 def upload_file(filename, recipient):
@@ -8,7 +11,7 @@ def upload_file(filename, recipient):
     gauth = GoogleAuth()
     # try to load saved client credentials
     # this is specific to computer/user account
-    gauth.LoadCredentialsFile("mycreds.txt")
+    gauth.LoadCredentialsFile(f"{DIR_PATH}/mycreds.txt")
     if gauth.credentials is None:
         # authenticate if they're not there
         gauth.LocalWebserverAuth()
@@ -19,13 +22,15 @@ def upload_file(filename, recipient):
         # initialize the saved creds
         gauth.Authorize()
     # save the current credentials to a file
-    gauth.SaveCredentialsFile("mycreds.txt")
+    gauth.SaveCredentialsFile(f"{DIR_PATH}/mycreds.txt")
 
     drive = GoogleDrive(gauth)
 
     # Demo Videos: Folder ID = 1NlxuZwt12g54JjL6Unr01h6DauOJQvOW
     myfile = drive.CreateFile({'parents': [{'id': '1NlxuZwt12g54JjL6Unr01h6DauOJQvOW'}]})
     myfile.SetContentFile(filename)  # reference file name to be uploaded
+    name = filename[filename.rindex('/')+1:]
+    myfile['title'] = name  # update file name
     myfile.Upload()  # upload file
     print("File uploaded!")
 
