@@ -15,8 +15,8 @@ DIR_PATH = os.path.dirname(os.path.realpath(__file__))
 class VideoRecorder():
     "Video class based on openCV"
 
-    def __init__(self, name=f"{DIR_PATH}/temp_video.avi", fourcc="MJPG", sizex=640,
-                 sizey=480, camindex=0, fps=30):
+    def __init__(self, name=f"{DIR_PATH}/temp_video.avi", fourcc="MJPG", sizex=1280,
+                 sizey=720, camindex=0, fps=30):
         self.open = True
         self.device_index = camindex
         self.fps = fps                  # fps should be the minimum constant rate at which the camera can
@@ -24,6 +24,8 @@ class VideoRecorder():
         self.frameSize = (sizex, sizey) # video formats and sizes also depend and vary according to the camera used
         self.video_filename = name
         self.video_cap = cv2.VideoCapture(self.device_index)
+        self.video_cap.set(3, 1280)
+        self.video_cap.set(4, 720)
         self.video_writer = cv2.VideoWriter_fourcc(*self.fourcc)
         self.video_out = cv2.VideoWriter(self.video_filename, self.video_writer, self.fps, self.frameSize)
         self.frame_counts = 1
@@ -136,18 +138,15 @@ def stop_AVrecording(filename):
 
     # Merging audio and video signal
     # if the fps rate higher/lower than expected, re-encode it to the expected
-    if abs(recorded_fps - 6) >= 0.01:
+    if abs(recorded_fps - 30) >= 0.01:
         print("Re-encoding")
-        # cmd = "ffmpeg -hide_banner -loglevel panic -r " + str(recorded_fps) + " -i temp_video.avi -pix_fmt yuv420p -r 6 temp_video2.avi"
-        cmd = f"ffmpeg -hide_banner -loglevel panic -r {recorded_fps} -i {DIR_PATH}/temp_video.avi -pix_fmt yuv420p -r 6 {DIR_PATH}/temp_video2.avi"
+        cmd = f"ffmpeg -hide_banner -loglevel panic -r {recorded_fps} -i {DIR_PATH}/temp_video.avi -pix_fmt yuv420p -r 30 {DIR_PATH}/temp_video2.avi"
         subprocess.call(cmd, shell=True)
         print("Muxing")
-        # cmd = "ffmpeg -hide_banner -loglevel panic -y -ac 2 -channel_layout stereo -i temp_audio.wav -i temp_video2.avi -pix_fmt yuv420p " + filename + ".avi"
         cmd = f"ffmpeg -hide_banner -loglevel panic -y -ac 2 -channel_layout stereo -i {DIR_PATH}/temp_audio.wav -i {DIR_PATH}/temp_video2.avi -pix_fmt yuv420p {filename}.avi"
         subprocess.call(cmd, shell=True)
     else:
         print("Normal recording\nMuxing")
-        # cmd = "ffmpeg -hide_banner -loglevel panic -y -ac 2 -channel_layout stereo -i temp_audio.wav -i temp_video.avi -pix_fmt yuv420p " + filename + ".avi"
         cmd = f"ffmpeg -hide_banner -loglevel panic -y -ac 2 -channel_layout stereo -i {DIR_PATH}/temp_audio.wav -i {DIR_PATH}/temp_video.avi -pix_fmt yuv420p {filename}.avi"
         subprocess.call(cmd, shell=True)
         print("..")
