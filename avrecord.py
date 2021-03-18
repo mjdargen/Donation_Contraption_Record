@@ -7,6 +7,7 @@ import time
 import subprocess
 import os
 import datetime
+import pywinauto
 from drive_util import upload_file
 
 DIR_PATH = os.path.dirname(os.path.realpath(__file__))
@@ -175,3 +176,42 @@ def record_video(duration, email):
     print("Done recording")
     file_manager()  # clean up files
     upload_file(f"{filename}.avi", email)  # upload/email file
+
+    
+def win_record(duration, email):
+    # open app
+    # app = pywinauto.Application(backend='uia').start(r'WindowsCamera.exe')  # doesn't work
+    subprocess.run('start microsoft.windows.camera:', shell=True)  # open camera app
+    # subprocess.run('Taskkill /IM WindowsCamera.exe /F', shell=True)  # close app
+    time.sleep(2)  # have to sleep
+
+    # take control of camera window to take video
+    desktop = pywinauto.Desktop(backend="uia")
+    cam = desktop['Camera']
+    # cam.print_control_identifiers()
+    # make sure in video mode
+    if cam.child_window(title="Switch to Video mode", auto_id="CaptureButton_1", control_type="Button").exists():
+        cam.child_window(title="Switch to Video mode", auto_id="CaptureButton_1", control_type="Button").click()
+    time.sleep(1)
+    # start then stop video
+    cam.child_window(title="Take Video", auto_id="CaptureButton_1", control_type="Button").click()
+    time.sleep(duration+2)
+    cam.child_window(title="Stop taking Video", auto_id="CaptureButton_1", control_type="Button").click()
+
+    # retrieve vids from camera roll and sort
+    dir = 'C:/Users/michael.dargenio/Pictures/Camera Roll'
+    all_contents = list(os.listdir(dir))
+    vids = [f for f in all_contents if ".mp4" in f]
+    vids.sort()
+    vid = vids[-1]
+    # compute time difference
+    vid_time = vid.replace('WIN_', '').replace('_Pro.mp4', '')
+    vid_time = datetime.datetime.strptime(vid_time, '%Y%m%d_%H_%M_%S')
+    now = datetime.datetime.now()
+    diff = now - vid_time
+    # time different greater than 2 minutes, assume something wrong & quit
+    if diff.seconds > 120:
+        quit()
+
+    print('Recorded successfully!')
+    upload_file(f'{dir}/{vid}', email)  # upload/email file
